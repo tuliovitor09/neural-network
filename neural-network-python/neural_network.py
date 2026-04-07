@@ -1,4 +1,5 @@
 import tensorflow as tf
+import numpy as np
 
 
 def train_model(input_xs, output_ys):
@@ -41,5 +42,27 @@ output_ys = tf.constant(tensor_labels, dtype=tf.float32)
 # treina o modelo
 model = train_model(input_xs, output_ys)
 
-pred = model.predict(input_xs)
-print(pred)
+# criando um novo tensor para a pessoa jose
+pessoa = {"nome": "jose", "idade": 28, "cor": "verde", "localizacao": "São Paulo"}
+
+# pessoa normalizada
+jose = [
+    [
+        0.28,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+    ],
+]
+
+jose_input = tf.constant(jose, dtype=tf.float32)
+pred: np.ndarray = model.predict(jose_input, verbose=0)
+
+classes = ["premium", "medium", "basic"]
+
+probs = pred[0]
+for nome, p in zip(classes, probs):
+    print(f"{nome}: {p * 100:.2f}%")
